@@ -5,7 +5,6 @@
     <title><?php echo $page_title; ?></title>
     
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
     <style>
@@ -29,6 +28,32 @@
             background-color: #222;
             color: #f8f9fa;
         }
+
+        /* 文字呼吸动画 */
+        @keyframes textBreath {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* 水平轻微左右移动 */
+        @keyframes textSlide {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* 应用在标题上的样式 */
+        .header-title {
+            animation: textBreath 3s ease-in-out infinite, textSlide 4s ease-in-out infinite;
+            display: inline-block;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100 light-mode" id="theme">
@@ -37,7 +62,7 @@
             <!-- 左边的 logo 和标题部分 -->
             <div class="d-flex align-items-center">
                 <img src="assets/logo.svg" alt="Just Eat Logo" width="50" height="50" class="me-3">
-                <h1 class="mb-0">Just Eat</h1>
+                <h1 class="mb-0 header-title">Just Eat</h1>
             </div>
             <!-- 右边的按钮 -->
             <button onclick="toggleTheme()" class="btn btn-outline-light position-absolute end-0" id="themeToggle">
@@ -49,23 +74,22 @@
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     
     <script>
-function toggleTheme() {
-    const body = document.getElementById('theme');
-    const header = document.getElementById('header');
-    const footer = document.getElementById('footer'); // 取得 footer 元素
-    const themeToggle = document.getElementById('themeToggle');
-    
-    if (body.classList.contains('light-mode')) {
-        body.classList.replace('light-mode', 'dark-mode');
-        header.classList.replace('light-mode', 'dark-mode');
-        if (footer) footer.classList.replace('light-mode', 'dark-mode'); // 检查 footer 是否存在
-        themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
-    } else {
-        body.classList.replace('dark-mode', 'light-mode');
-        header.classList.replace('dark-mode', 'light-mode');
-        if (footer) footer.classList.replace('dark-mode', 'light-mode'); // 检查 footer 是否存在
-        themeToggle.innerHTML = '<i class="bi bi-moon-stars"></i>';
-    }
-}
-
+        function toggleTheme() {
+            const body = document.getElementById('theme');
+            const header = document.getElementById('header');
+            const footer = document.getElementById('footer');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.replace('light-mode', 'dark-mode');
+                header.classList.replace('light-mode', 'dark-mode');
+                if (footer) footer.classList.replace('light-mode', 'dark-mode');
+                themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+            } else {
+                body.classList.replace('dark-mode', 'light-mode');
+                header.classList.replace('dark-mode', 'light-mode');
+                if (footer) footer.classList.replace('dark-mode', 'light-mode');
+                themeToggle.innerHTML = '<i class="bi bi-moon-stars"></i>';
+            }
+        }
     </script>

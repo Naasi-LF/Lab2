@@ -26,16 +26,16 @@ include('includes/header.html');
 
     <!-- Modern grid-style navigation layout -->
     <div class="row text-center mt-5 pt-4">
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
             <a href="forum.php" class="card shadow-sm text-decoration-none" style="border-radius: 15px;">
                 <div class="card-body">
                     <i class="bi bi-chat-square-text-fill display-4 text-primary"></i>
                     <h5 class="mt-3 text-dark">Forum</h5>
-                    <p class="text-muted">Join discussions and connect with others</p>
+                    <p class="text-muted">Join discussions with others</p>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
             <a href="shop.php" class="card shadow-sm text-decoration-none" style="border-radius: 15px;">
                 <div class="card-body">
                     <i class="bi bi-cart-fill display-4 text-primary"></i>
@@ -44,7 +44,16 @@ include('includes/header.html');
                 </div>
             </a>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
+            <a href="orders_received.php" class="card shadow-sm text-decoration-none" style="border-radius: 15px;">
+                <div class="card-body">
+                    <i class="bi bi-receipt-cutoff display-4 text-primary"></i>
+                    <h5 class="mt-3 text-dark">My Orders</h5>
+                    <p class="text-muted">View your order history</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-4">
             <a href="goodbye.php" class="card shadow-sm text-decoration-none" style="border-radius: 15px;">
                 <div class="card-body">
                     <i class="bi bi-box-arrow-right display-4 text-danger"></i>

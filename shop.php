@@ -1,4 +1,4 @@
-<?php
+<?php 
 # Access session.
 session_start();
 
@@ -22,8 +22,26 @@ $price_max = isset($_GET['price_max']) ? (int)$_GET['price_max'] : 100;
 $spiciness_min = isset($_GET['spiciness_min']) ? (int)$_GET['spiciness_min'] : 0;
 $spiciness_max = isset($_GET['spiciness_max']) ? (int)$_GET['spiciness_max'] : 5;
 $restaurant = isset($_GET['restaurant']) ? mysqli_real_escape_string($dbc, $_GET['restaurant']) : '';
+$sort_by = isset($_GET['sort_by']) ? mysqli_real_escape_string($dbc, $_GET['sort_by']) : 'name_asc';
 
-# Query with filters
+# Define sorting conditions based on selected sort option
+$sort_query = '';
+switch ($sort_by) {
+    case 'name_asc':
+        $sort_query = 'ORDER BY item_name ASC';
+        break;
+    case 'name_desc':
+        $sort_query = 'ORDER BY item_name DESC';
+        break;
+    case 'price_asc':
+        $sort_query = 'ORDER BY item_price ASC';
+        break;
+    case 'price_desc':
+        $sort_query = 'ORDER BY item_price DESC';
+        break;
+}
+
+# Query with filters and sorting
 $q = "SELECT * FROM shop WHERE item_name LIKE '%$search_query%'";
 if ($vegetarian) { $q .= " AND vegetarian=1"; }
 if ($hasMeat) { $q .= " AND hasMeat=1"; }
@@ -31,6 +49,7 @@ if ($hasFish) { $q .= " AND hasFish=1"; }
 $q .= " AND item_price BETWEEN $price_min AND $price_max";
 $q .= " AND spiciness BETWEEN $spiciness_min AND $spiciness_max";
 if ($restaurant) { $q .= " AND restaurant='$restaurant'"; }
+$q .= " $sort_query";
 
 $r = mysqli_query($dbc, $q);
 
@@ -50,6 +69,9 @@ $restaurants_result = mysqli_query($dbc, "SELECT DISTINCT restaurant FROM shop")
                 <li class="nav-item"><a class="nav-link" href="cart.php">View Cart</a></li>
                 <li class="nav-item"><a class="nav-link" href="forum.php">Forum</a></li>
                 <li class="nav-item"><a class="nav-link" href="home.php">Home</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="orders_received.php">orders</a>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="goodbye.php">Logout</a></li>
             </ul>
         </div>
@@ -96,7 +118,7 @@ $restaurants_result = mysqli_query($dbc, "SELECT DISTINCT restaurant FROM shop")
                 </div>
             </div>
 
-            <!-- Restaurant Filter -->
+            <!-- Restaurant and Sort Filter -->
             <div class="col-md-4">
                 <label for="restaurant" class="form-label">Select Restaurant</label>
                 <select class="form-select" id="restaurant" name="restaurant">
@@ -106,6 +128,16 @@ $restaurants_result = mysqli_query($dbc, "SELECT DISTINCT restaurant FROM shop")
                             <?php echo $row['restaurant']; ?>
                         </option>
                     <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="sort_by" class="form-label">Sort By</label>
+                <select class="form-select" id="sort_by" name="sort_by">
+                    <option value="name_asc" <?php if ($sort_by == 'name_asc') echo 'selected'; ?>>Name (A-Z)</option>
+                    <option value="name_desc" <?php if ($sort_by == 'name_desc') echo 'selected'; ?>>Name (Z-A)</option>
+                    <option value="price_asc" <?php if ($sort_by == 'price_asc') echo 'selected'; ?>>Price (Low to High)</option>
+                    <option value="price_desc" <?php if ($sort_by == 'price_desc') echo 'selected'; ?>>Price (High to Low)</option>
                 </select>
             </div>
         </div>

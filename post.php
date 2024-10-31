@@ -34,8 +34,12 @@ include('includes/header.html');
                     <a class="nav-link" href="home.php">Home</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="orders_received.php">orders</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="goodbye.php">Logout</a>
                 </li>
+                
             </ul>
         </div>
     </div>
