@@ -1,0 +1,143 @@
+<html lang="en">
+  <head>
+    <title>Bootstrap 5 Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    /> -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js" integrity="sha384-/mhDoLbDldZc3qpsJHpLogda//BVZbgYuw6kof4u2FrCedxOtgRZDTHgHUhOCVim" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"><?=getWebsiteTitle()?></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" onclick="showR5Dishes()" href="#"
+                >Show Restaurant #5 Dishes</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" onclick="showR20Dishes()" href="#"
+                >Show Restaurant #20 Dishes</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" onclick="showR7Dishes()" href="#"
+                >Show Restaurant #7 Dishes</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" onclick="hideDishes()" href="#"
+                >Hide Dishes</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid p-5 bg-primary text-white text-center">
+      <h1>Title</h1>
+    </div>
+    <div class="container" id="total-dishs"></div>
+  </body>
+  <script>
+    function pic(picUrl) {
+      const regex = /^.*?pictures/i;
+      return picUrl.replace(regex, picFolder);
+    }
+
+    let picFolder = "";
+
+    const getR20dishes = async () => {
+      const svcUrl = "http://localhost/r/g20/Restaurant/svc/all_dishes";
+      const regex = /svc.*$/i;
+      picFolder = svcUrl.replace(regex, "pictures");
+      const request = await fetch(svcUrl);
+      const dishes = await request.json();
+      return dishes;
+    };
+
+    const getR5dishes = async () => {
+      const svcUrl = "http://localhost/r/g5/Restaurant/svc/all_dishes";
+      const regex = /svc.*$/i;
+      picFolder = svcUrl.replace(regex, "pictures");
+      const request = await fetch(svcUrl);
+      const dishes = await request.json();
+      return dishes;
+    };
+
+    // 展示餐馆7的菜单
+    const getR7dishes = async () => {
+      const svcUrl = "http://localhost/r/g7/Restaurant/svc/all_dishes";
+      const regex = /svc.*$/i;
+      picFolder = svcUrl.replace(regex, "pictures");
+      const request = await fetch(svcUrl);
+      const dishes = await request.json();
+      return dishes;
+    };
+
+    function showR20Dishes() {
+      hideDishes();
+      getR20dishes().then((dishes) => {
+        dishes.data.map((thing) => doFormat(thing));
+      });
+    }
+
+    function showR5Dishes() {
+      hideDishes();
+      getR5dishes().then((dishes) => {
+        dishes.data.map((thing) => doFormat(thing));
+      });
+    }
+
+    // 展示餐馆7的菜单
+    function showR7Dishes() {
+      hideDishes();
+      getR7dishes().then((dishes) => {
+        dishes.data.map((thing) => doFormat(thing));
+      });
+    }
+    function hideDishes() {
+      document.getElementById("total-dishs").innerHTML = "";
+    }
+
+    function doFormat(item) {
+      document.getElementById("total-dishs").innerHTML += ` 
+  <div class="col-md-4">
+            <div class="card" style="width:300px" >
+                <img class="card-img-top dishpic" src="${pic(
+                  item.picture
+                )}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">${item.title_en}</h5>
+                    <p class="card-text">${item.description_en}</p>
+					<p class="card-text">${item.description_zh}</p>
+                </div>
+            </div>
+        </div>
+
+  `;
+    }
+  </script>
+</html>

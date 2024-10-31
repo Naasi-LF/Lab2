@@ -1,0 +1,366 @@
+<html lang="en">
+<head>
+    <title>Bootstrap 5 Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Fusion Restaurant</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showDishes()" href="#">Show All Dishes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="hideDishes()" href="#">Hide Dishes</a>
+                    </li>
+                    <!-- 展示肉类 -->
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showMeatDish()" href="#">Meat Dishes</a>
+                    </li>
+                    <!-- 展示蔬菜类 -->
+                    <li class="nav-item" onclick="showVegetableDish()">
+                        <a class="nav-link" href="#">Vegetable Dishes</a>
+                    </li>
+                    <!-- 展示鱼类 -->
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showFishDish()" href="#">Fish Dishes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid p-5 bg-primary text-white text-center">
+        <h1>fusion restaurant</h1>
+    </div>
+    <div class="container">
+        <form>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" value="20" id="chk1">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Restaurant 20
+                </label>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" value="11" id="chk2">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Restaurant 11
+                </label>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" value="2" id="chk3">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Restaurant 2
+                </label>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" value="7" id="chk4">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Restaurant 7
+                </label>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" value="5" id="chk5">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Restaurant 5
+                </label>
+            </div>
+
+            <select class="form-select mb-3" aria-label="Sort By" id="sortValue">
+                <option selected value="Price Low to High">Price Low to High</option>
+                <option value="Price High to Low">Price High to Low</option>
+                <option value="Spiciness Low to High">Spiciness Low to High</option>
+                <option value="Spiceiness High to Low">Spiceiness High to Low</option>
+            </select>
+
+
+            <label for="customRange1" class="form-label">Choose Dishes With Maximum Price Of</label>
+            <input type="range" class="form-range" style="width:50%" min="10" max="200" value="200" id="maxPrice">
+            <span id="sliderVal"></span>RMB
+
+            <p>Filter by Dish Type</p>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" value="all" type="radio" name="mealType" id="mealType1" checked>
+                <label class="form-check-label" for="mealType1">
+                    All Dishes
+                </label>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" value="vegetarian" type="radio" name="mealType" id="mealType2">
+                <label class="form-check-label" for="mealType2">
+                    Vegetarian Only
+                </label>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" value="fish" type="radio" name="mealType" id="mealType3">
+                <label class="form-check-label" for="mealType3">
+                    Fish Only
+                </label>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" value="meat" type="radio" name="mealType" id="mealType4">
+                <label class="form-check-label" for="mealType4">
+                    Meat Only
+                </label>
+            </div>
+            <a class="btn btn-primary" onclick="showChoices()">Submit</a>
+        </form>
+        <div class="row justify-content-around" id="total-dishs">
+        </div>
+</body>
+<script>
+    function changePic(svcUrl, dishObj) {
+        const svcRegex = /svc.*$/i;
+        const picRegex = /^.*?pictures/i;
+        picFolder = svcUrl.replace(svcRegex, "pictures");
+        console.log("picFolder", picFolder);
+        dishObj.picture = dishObj.picture.replace(picRegex, picFolder);
+    }
+
+    function pic(picUrl) {
+        const regex = /^.*?pictures/i;
+        return picUrl.replace(regex, picFolder);
+    }
+
+    let picFolder = "";
+    // 获取所有dishes
+    let everyDish = [];
+    // 获取肉类dishes
+    let meatDish = [];
+    // 获取蔬菜类dishes
+    let vegetableDish = [];
+    // 获取鱼类dishes
+    let fishDish = [];
+
+    let maxPrice = 200;
+    let sortType = "Price Low to High";
+    let foodType = "All";
+
+    let maxPriceSlider = document.getElementById("maxPrice");
+    maxPriceSlider.innerHTML = maxPrice.value; // Display the default slider value
+    maxPriceSlider.oninput = function () {
+        sliderVal.innerHTML = this.value;
+    }
+
+    const getDishes = async (svcUrl) => {
+        const regex = /svc.*$/i;
+        picFolder = svcUrl.replace(regex, "pictures");
+        if (localStorage.getItem(svcUrl) == null) {
+            const request = await fetch(svcUrl);
+            let dishes = await request.json();
+            dishes.data.map(thing => changePic(svcUrl, thing));
+            localStorage.setItem(svcUrl, JSON.stringify(dishes));
+        }
+        return JSON.parse(localStorage.getItem(svcUrl));
+    };
+
+    function showDishes(num) {
+        // hideDishes();
+		alert(num);
+        getDishes(`http://localhost/r/g${num}/Restaurant/svc/all_dishes`).then(dishes => {
+            everyDish = everyDish.concat(dishes.data);
+        });
+    }
+
+    // 展示所有dishes
+    function showAllDishes() {
+        //hideDishes();
+        // 选择价格
+        everyDish = selectPrice(everyDish);
+
+        // 选择价格顺序
+        everyDish = sortDishes(everyDish);
+        // console.log("everyDish", everyDish);
+        everyDish.map(thing => doFormat(thing));
+
+    }
+
+    // 展示肉类
+    function showMeatDish() {
+        // 跳转到meat_dishes.html
+        //hideDishes();
+        // 对everyDish进行过滤，hasMeat
+        // console.log("everyDish", everyDish);
+        meatDish = everyDish.filter(thing => {
+            if (thing !== undefined) {
+                return thing.hasMeat === 1;
+            }
+        })
+        // 选择价格
+        meatDish = selectPrice(meatDish);
+        // 选择价格顺序
+        meatDish = sortDishes(meatDish);
+        meatDish.map(thing => doFormat(thing));
+
+    }
+
+    // 展示蔬菜类
+    function showVegetableDish() {
+        //hideDishes();
+        vegetableDish = everyDish.filter(thing => {
+            if (thing !== undefined) {
+                return thing.vegetarian === 1
+            }
+        })
+        vegetableDish = selectPrice(vegetableDish);
+        vegetableDish = sortDishes(vegetableDish);
+        vegetableDish.map(thing => doFormat(thing));
+    }
+
+    // 展示鱼类
+    function showFishDish() {
+        //hideDishes();
+        fishDish = everyDish.filter(thing => {
+            if (thing !== undefined) {
+                return thing.hasFish === 1;
+            }
+        })
+        fishDish = selectPrice(fishDish);
+        fishDish = sortDishes(fishDish);
+        fishDish.map(thing => doFormat(thing));
+    }
+
+    // 价格从高到低
+    function sortPriceHighToLow(dish) {
+        // hideDishes();
+        dish.sort((a, b) => {
+            return b.price - a.price;
+        })
+        return dish
+    }
+
+    // 价格从低到高
+    function sortPriceLowToHigh(dish) {
+        // hideDishes();
+        dish.sort((a, b) => {
+            return a.price - b.price;
+        })
+        // console.log("dish", dish);
+        return dish
+    }
+
+    // 辣度从高到低
+    function sortSpicyHighToLow(dish) {
+        // hideDishes();
+        dish.sort((a, b) => {
+            return b.spiciness - a.spiciness;
+        })
+        return dish
+    }
+
+    // 辣度从低到高
+    function sortSpicyLowToHigh(dish) {
+        // hideDishes();
+        dish.sort((a, b) => {
+            return a.spiciness - b.spiciness;
+        })
+        return dish
+    }
+
+    // 选择价格,价格低于maxPrice
+    function selectPrice(dish) {
+        // hideDishes();
+        dish = dish.filter(thing => {
+            if (thing !== undefined) {
+                return thing.price <= maxPrice;
+            }
+        })
+        return dish
+    }
+
+    // 选择排序模式
+    function sortDishes(dish) {
+        if (sortType === "Price Low to High") {
+            dish = sortPriceLowToHigh(dish)
+        } else if (sortType === "Price High to Low") {
+            dish = sortPriceHighToLow(dish)
+        } else if (sortType === "Spiciness Low to High") {
+            dish = sortSpicyLowToHigh(dish)
+        } else if (sortType === "Spiciness High to Low") {
+            dish = sortSpicyHighToLow(dish)
+        }
+        return dish
+    }
+    function hideDishes() {
+        document.getElementById("total-dishs").innerHTML = "";
+    }
+
+    function doFormat(item) {
+        document.getElementById("total-dishs").innerHTML +=
+            `
+                <div class="col-6 col-md-4">
+                            <div class="card mt-2 item" >
+                                <img class="card-img-top img-thumbnail dishpic" src="${item.picture}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.title_en}</h5>
+                                    <p class="card-text"><span style='background-color:yellow'>${item.price}</span>RMB</p>
+                                    <p class="card-text">${item.description_en}</p>
+                                    <p class="card-text">${item.description_zh}</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+  `
+    }
+
+    function getRestaurants() {
+        let retval = [];
+        let i = 1;
+        for (i = 1; i < 6; i++) {
+            chkBox = document.getElementById("chk" + i);
+            // console.log(i + " " + chkBox.checked + chkBox.value);
+            if (chkBox.checked) retval.push(chkBox.value);
+        }
+        return retval;
+    }
+    function showChoices() {
+        hideDishes();
+        restaurants = getRestaurants();
+        sortType = document.getElementById("sortValue").value;
+        maxPrice = document.getElementById("maxPrice").value;
+        foodType = document.querySelector('input[name="mealType"]:checked').value;
+        // 判断restaurants是否为空
+        if (restaurants.length == 0) {
+            alert("Please select at least one restaurant");
+            return;
+        } else {
+            // console.log("restaurants", restaurants);
+            for (i = 0; i < restaurants.length; i++) {
+                showDishes(Number(restaurants[i]))
+            }
+            console.log("everyDishes",everyDish)
+            // 将所有菜品清空
+            everyDish = [];
+            // hideDishes();
+        }
+        setTimeout(() => {
+            if (foodType === "all") {
+                showAllDishes();
+            } else if (foodType === "meat") {
+                showMeatDish();
+            } else if (foodType == "vegetarian") {
+                showVegetableDish();
+            } else if (foodType == "fish") {
+                showFishDish();
+            }
+        })
+    }
+</script>
+</div>
+</div>
+
+<body>
+
+</html>
