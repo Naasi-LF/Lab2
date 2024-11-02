@@ -13,7 +13,7 @@ include('includes/header.html');
 require('connect_db.php');
 
 # Get filter values
-$search_query = isset($_GET['search']) ? mysqli_real_escape_string($dbc, $_GET['search']) : '';
+$search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
 $vegetarian = isset($_GET['vegetarian']) ? 1 : 0;
 $hasMeat = isset($_GET['hasMeat']) ? 1 : 0;
 $hasFish = isset($_GET['hasFish']) ? 1 : 0;
@@ -21,8 +21,8 @@ $price_min = isset($_GET['price_min']) ? (int)$_GET['price_min'] : 0;
 $price_max = isset($_GET['price_max']) ? (int)$_GET['price_max'] : 100;
 $spiciness_min = isset($_GET['spiciness_min']) ? (int)$_GET['spiciness_min'] : 0;
 $spiciness_max = isset($_GET['spiciness_max']) ? (int)$_GET['spiciness_max'] : 5;
-$restaurant = isset($_GET['restaurant']) ? mysqli_real_escape_string($dbc, $_GET['restaurant']) : '';
-$sort_by = isset($_GET['sort_by']) ? mysqli_real_escape_string($dbc, $_GET['sort_by']) : 'name_asc';
+$restaurant = isset($_GET['restaurant']) ? trim($_GET['restaurant']) : '';
+$sort_by = isset($_GET['sort_by']) ? trim($_GET['sort_by']) : 'name_asc';
 
 # Define sorting conditions based on selected sort option
 $sort_query = '';
@@ -41,25 +41,40 @@ switch ($sort_by) {
         break;
 }
 
-# Query with filters and sorting
-$q = "SELECT * FROM shop WHERE item_name LIKE '%$search_query%'";
-if ($vegetarian) { $q .= " AND vegetarian=1"; }
-if ($hasMeat) { $q .= " AND hasMeat=1"; }
-if ($hasFish) { $q .= " AND hasFish=1"; }
-$q .= " AND item_price BETWEEN $price_min AND $price_max";
-$q .= " AND spiciness BETWEEN $spiciness_min AND $spiciness_max";
-if ($restaurant) { $q .= " AND restaurant='$restaurant'"; }
+# Prepare the base query with placeholders
+$q = "SELECT * FROM shop WHERE item_name LIKE ? AND item_price BETWEEN ? AND ? AND spiciness BETWEEN ? AND ?";
+$params = ['%' . $search_query . '%', $price_min, $price_max, $spiciness_min, $spiciness_max];
+$types = 'siiii';
+
+if ($vegetarian) {
+    $q .= " AND vegetarian = 1";
+}
+if ($hasMeat) {
+    $q .= " AND hasMeat = 1";
+}
+if ($hasFish) {
+    $q .= " AND hasFish = 1";
+}
+if ($restaurant) {
+    $q .= " AND restaurant = ?";
+    $params[] = $restaurant;
+    $types .= 's';
+}
 $q .= " $sort_query";
 
-$r = mysqli_query($dbc, $q);
+# Prepare and execute the statement
+$stmt = $dbc->prepare($q);
+$stmt->bind_param($types, ...$params);
+$stmt->execute();
+$r = $stmt->get_result();
 
 # Get list of unique restaurants for the dropdown
-$restaurants_result = mysqli_query($dbc, "SELECT DISTINCT restaurant FROM shop");
+$restaurants_result = $dbc->query("SELECT DISTINCT restaurant FROM shop");
 
 # Display filters and search bar
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
+    <div class="container">
         <a class="navbar-brand" href="home.php">Shop</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -77,6 +92,7 @@ $restaurants_result = mysqli_query($dbc, "SELECT DISTINCT restaurant FROM shop")
         </div>
     </div>
 </nav>
+
 
 <div class="container mt-5">
     <h1 class="text-center display-4 fw-light text-uppercase mb-4">Shop</h1>

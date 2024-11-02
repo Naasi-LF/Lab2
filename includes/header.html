@@ -20,50 +20,66 @@
         header, footer {
             transition: background-color 0.3s, color 0.3s;
         }
-        header.light-mode, footer.light-mode {
-            background-color: #343a40;
-            color: #ffffff;
+        header.light-mode {
+            background-color: #4a4a4a;
+            color: #f1f1f1;
         }
-        header.dark-mode, footer.dark-mode {
-            background-color: #222;
-            color: #f8f9fa;
+        header.dark-mode {
+            background-color: #2a2a2a;
+            color: #f1f1f1;
         }
-
-        /* 文字呼吸动画 */
-        @keyframes textBreath {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+        footer.light-mode {
+            background-color: #4a4a4a; /* 与 header.light-mode 相同 */
+            color: #f1f1f1;
         }
 
-        /* 水平轻微左右移动 */
-        @keyframes textSlide {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(5px);
-            }
+        footer.dark-mode {
+            background-color: #2a2a2a; /* 与 header.dark-mode 相同 */
+            color: #e0e0e0;
         }
 
-        /* 应用在标题上的样式 */
         .header-title {
-            animation: textBreath 3s ease-in-out infinite, textSlide 4s ease-in-out infinite;
             display: inline-block;
+            font-size: 2rem;
         }
+
+        .header-title span {
+            display: inline-block;
+            animation: jump 1s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+
+
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100 light-mode" id="theme">
-    <header class="py-3 light-mode" id="header">
+    <header class="py-3 light-mode shadow-sm" id="header">
         <div class="container position-relative d-flex justify-content-center align-items-center">
             <!-- 左边的 logo 和标题部分 -->
             <div class="d-flex align-items-center">
                 <img src="assets/logo.svg" alt="Just Eat Logo" width="50" height="50" class="me-3">
-                <h1 class="mb-0 header-title">Just Eat</h1>
+                <h1 class="mb-0 header-title">
+                    <span style="--i:0">J</span>
+                    <span style="--i:1">u</span>
+                    <span style="--i:2">s</span>
+                    <span style="--i:3">t</span>
+                    <span style="--i:4"> </span>
+                    <span style="--i:5">E</span>
+                    <span style="--i:6">a</span>
+                    <span style="--i:7">t</span>
+                </h1>
             </div>
+            
             <!-- 右边的按钮 -->
             <button onclick="toggleTheme()" class="btn btn-outline-light position-absolute end-0" id="themeToggle">
                 <i class="bi bi-moon-stars"></i>

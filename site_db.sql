@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Nov 02, 2023 at 11:49 AM
--- Server version: 5.7.36
--- PHP Version: 8.1.3
+-- 主机： 127.0.0.1:3306
+-- 生成日期： 2024-11-02 22:00:48
+-- 服务器版本： 8.0.37
+-- PHP 版本： 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,17 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `site_db`
+-- 数据库： `site_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `forum`
+-- 表的结构 `forum`
 --
 
 CREATE TABLE `forum` (
-  `post_id` int(10) UNSIGNED NOT NULL,
+  `post_id` int UNSIGNED NOT NULL,
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(40) NOT NULL,
   `subject` varchar(60) NOT NULL,
@@ -36,41 +36,97 @@ CREATE TABLE `forum` (
   `post_date` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- 转存表中的数据 `forum`
+--
+
+INSERT INTO `forum` (`post_id`, `first_name`, `last_name`, `subject`, `message`, `post_date`) VALUES
+(1, 'XiCheng', 'Yang', 'test', 'hahaha', '2024-10-29 00:07:05'),
+(2, 'XiCheng', 'Yang', 'hello', '## hello\r\n### hello\r\n```cpp\r\nprintf(\"hello world\");\r\n```\r\n', '2024-10-30 00:28:24'),
+(3, 'XiCheng', 'Yang', 'Learning SQL Injection', 'Exploring SQL injection techniques in a secure environment.', '2024-10-31 17:35:01'),
+(4, 'XiCheng', 'Yang', 'SQL Basics', 'Understanding the fundamentals of SQL and relational databases.', '2024-10-30 17:35:01'),
+(5, 'XiCheng', 'Yang', 'Advanced SQL Techniques', 'Diving deeper into joins, indexes, and optimizations.', '2024-10-29 17:35:01'),
+(6, 'XiCheng', 'Yang', 'Preventing SQL Injection', 'A guide on how to secure applications against SQL injection.', '2024-10-28 17:35:01'),
+(7, 'XiCheng', 'Yang', 'Using PHP with MySQL', 'Connecting PHP applications to MySQL databases.', '2024-10-27 17:35:01'),
+(8, 'XiCheng', 'Yang', 'Database Normalization', 'The importance of normalizing databases for optimal performance.', '2024-10-26 17:35:01'),
+(9, 'XiCheng', 'Yang', 'Database Indexing', 'How indexing can speed up data retrieval in large databases.', '2024-10-25 17:35:01'),
+(10, 'XiCheng', 'Yang', 'Common SQL Functions', 'Using functions like COUNT, AVG, MAX, and MIN in SQL queries.', '2024-10-24 17:35:01'),
+(11, 'XiCheng', 'Yang', 'Troubleshooting SQL Queries', 'Tips for debugging SQL queries and understanding error messages.', '2024-10-23 17:35:01'),
+(12, 'XiCheng', 'Yang', 'Building a Forum with PHP and MySQL', 'Creating a basic forum using PHP and MySQL.', '2024-10-22 17:35:01'),
+(13, 'YuTong', 'Wang', 'g1', 'good', '2024-11-03 03:13:02'),
+(14, 'YuTong', 'Wang', 'food', '## food\r\ni like beaf in this restaurant', '2024-11-03 03:13:55'),
+(15, 'JiangYang', 'Xv', '123', '·12345', '2024-11-03 04:36:37');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `orders`
+-- 表的结构 `orders`
 --
 
 CREATE TABLE `orders` (
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
+  `order_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `total` decimal(8,2) NOT NULL,
   `order_date` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- 转存表中的数据 `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `total`, `order_date`) VALUES
+(1, 1, 81.00, '2024-10-29 00:10:45'),
+(2, 1, 40.00, '2024-10-30 01:42:28'),
+(3, 1, 76.00, '2024-10-31 17:45:26'),
+(4, 1, 33.00, '2024-10-31 17:46:42'),
+(5, 1, 135.00, '2024-10-31 17:50:45'),
+(6, 1, 15.00, '2024-10-31 17:52:04'),
+(7, 2, 80.00, '2024-11-03 03:28:11'),
+(8, 3, 58.00, '2024-11-03 04:36:22'),
+(9, 4, 101.00, '2024-11-03 04:58:50');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `order_contents`
+-- 表的结构 `order_contents`
 --
 
 CREATE TABLE `order_contents` (
-  `content_id` int(10) UNSIGNED NOT NULL,
-  `order_id` int(10) UNSIGNED NOT NULL,
-  `item_id` int(10) UNSIGNED NOT NULL,
-  `quantity` int(10) UNSIGNED NOT NULL DEFAULT '1',
+  `content_id` int UNSIGNED NOT NULL,
+  `order_id` int UNSIGNED NOT NULL,
+  `item_id` int UNSIGNED NOT NULL,
+  `quantity` int UNSIGNED NOT NULL DEFAULT '1',
   `price` decimal(4,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- 转存表中的数据 `order_contents`
+--
+
+INSERT INTO `order_contents` (`content_id`, `order_id`, `item_id`, `quantity`, `price`) VALUES
+(1, 1, 0, 3, 15.00),
+(2, 1, 13, 2, 18.00),
+(3, 2, 1, 4, 10.00),
+(4, 3, 31, 2, 33.00),
+(5, 3, 96, 1, 10.00),
+(6, 4, 31, 1, 33.00),
+(7, 5, 78, 3, 25.00),
+(8, 5, 126, 1, 60.00),
+(9, 6, 188, 1, 15.00),
+(10, 7, 86, 1, 80.00),
+(11, 8, 31, 1, 33.00),
+(12, 8, 53, 1, 25.00),
+(13, 9, 31, 1, 33.00),
+(14, 9, 171, 1, 68.00);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `shop`
+-- 表的结构 `shop`
 --
 
 CREATE TABLE `shop` (
-  `item_id` int(11) NOT NULL,
+  `item_id` int NOT NULL,
   `guid` varchar(36) NOT NULL,
   `title_zh` varchar(100) NOT NULL,
   `item_name` varchar(500) NOT NULL,
@@ -79,15 +135,15 @@ CREATE TABLE `shop` (
   `vegetarian` tinyint(1) NOT NULL DEFAULT '0',
   `hasMeat` tinyint(1) NOT NULL DEFAULT '0',
   `hasFish` tinyint(1) NOT NULL DEFAULT '0',
-  `item_price` int(11) NOT NULL,
-  `spiciness` tinyint(4) NOT NULL,
+  `item_price` int NOT NULL,
+  `spiciness` tinyint NOT NULL,
   `item_img` varchar(200) NOT NULL,
   `fk_guid` varchar(36) NOT NULL,
   `restaurant` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 --
--- Dumping data for table `shop`
+-- 转存表中的数据 `shop`
 --
 
 INSERT INTO `shop` (`item_id`, `guid`, `title_zh`, `item_name`, `description_zh`, `item_desc`, `vegetarian`, `hasMeat`, `hasFish`, `item_price`, `spiciness`, `item_img`, `fk_guid`, `restaurant`) VALUES
@@ -113,7 +169,7 @@ INSERT INTO `shop` (`item_id`, `guid`, `title_zh`, `item_name`, `description_zh`
 (20, '3b87d759-52f0-11ee-8d71-b48c9d1b3686', '蔬菜沙拉', 'green salad', '蔬菜沙拉是一道 以圆白菜、番茄、黄瓜等作为主要食材制作而成的美食。蔬菜沙拉是一种非常营养健康的饮食方法。', 'Vegetable salad is a delicacy made with cabbage, tomatoes, cucumbers, and other main ingredients. Vegetable salad is a very nutritious and healthy dietary method.', 1, 0, 0, 15, 1, '5.png', '0', 'g1'),
 (21, '3b880716-52f0-11ee-8d71-b48c9d1b3686', '和牛烤串', 'Beef skewers', '烤串挑选上等牛肉，肉经炭火洗练，本就香气四溢，又因椒盐辣酱的增色，变得更加入味。', 'The skewers are made of high-quality beef, which is washed over charcoal fire and has a rich aroma. It is also enhanced by the color of spicy sauce, making it more flavorful.', 0, 1, 0, 15, 4, '4.png', '0', 'g1'),
 (22, '3b8845ef-52f0-11ee-8d71-b48c9d1b3686', '铁板披萨', 'Iron plate pizza', '铁板披萨，外酥里嫩，口感丰富。外层酥略带脆，内心又有一份柔软，口感真的是刚刚好。在饼底外侧，咀嚼时还能感受到类似苏打饼干的香气。', 'Iron plate pizza, crispy on the outside and tender on the inside, with a rich taste. The outer layer is slightly crispy, while the inner layer has a softness, and the taste is really just right. On the outer side of the bottom of the cake, you can still feel the aroma similar to soda biscuits when chewing.', 1, 1, 0, 20, 1, '3.png', '0', 'g1'),
-(23, '3b887d44-52f0-11ee-8d71-b48c9d1b3686', '香煎牛扒', 'Pan-fry steak', '铁板牛排是肉与铁盘碰撞出来的香气，切起来的牛排肉质细腻，柔软多汁，吃进嘴里，就能立刻感受到被酱汁唤醒的鲜嫩。', 'Iron plate steak is the aroma of meat colliding with iron plates. The cut steak is delicate, soft, and juicy, and once eaten, one can immediately feel the freshness awakened by the sauce.', 0, 1, 0, 22, 3, '0', '0', 'g1'),
+(23, '3b887d44-52f0-11ee-8d71-b48c9d1b3686', '香煎牛扒', 'Pan-fry steak', '铁板牛排是肉与铁盘碰撞出来的香气，切起来的牛排肉质细腻，柔软多汁，吃进嘴里，就能立刻感受到被酱汁唤醒的鲜嫩。', 'Iron plate steak is the aroma of meat colliding with iron plates. The cut steak is delicate, soft, and juicy, and once eaten, one can immediately feel the freshness awakened by the sauce.', 0, 1, 0, 22, 3, '0.png', '0', 'g1'),
 (24, '3b88b5bb-52f0-11ee-8d71-b48c9d1b3686', '香浓骨头汤', 'Fragrant Bone Soup', '骨头汤是一道菜品，制作原料主要有扇子骨、直通骨、尾脊骨等，味道鲜美，香味浓郁。', 'Bone soup is a dish made mainly from ingredients such as fan bone, straight bone, and tailbone. It has a delicious taste and a rich aroma.', 0, 1, 0, 25, 2, '1.png', '0', 'g1'),
 (25, '3b88db1b-52f0-11ee-8d71-b48c9d1b3686', '宫保鸡丁', 'Kung Pao Chicken', '宫保鸡丁', 'Kung Pao Chicken', 0, 1, 0, 33, 2, 'chicken.jpg', '0', 'g2'),
 (26, '3b890ca2-52f0-11ee-8d71-b48c9d1b3686', '糖醋里脊', 'pork fillets with sweet&sour sauce', '糖醋里脊', 'pork fillets with sweet&sour sauce', 0, 1, 0, 20, 3, '糖醋里脊.jpg', '0', 'g2'),
@@ -304,7 +360,7 @@ INSERT INTO `shop` (`item_id`, `guid`, `title_zh`, `item_name`, `description_zh`
 (210, '3bb18099-52f0-11ee-8d71-b48c9d1b3686', '清炒时蔬', 'Stir Fried Seasonal Vegetables', '清炒时蔬是一道由白菜等食材制成的美食。此菜清淡爽口，不宜添加多种调味品。', 'Stir fried seasonal vegetables are a delicacy made from ingredients such as cabbage. This dish is light and refreshing, and it is not suitable to add multiple seasonings.', 1, 0, 0, 15, 1, 'Camera_XHS_16852912634191000g00821jtbnjkfi00g5oh2phc41miqonrr0ug.jpg', '109db12b-f496-11ed-91ca-a4badbfbb15c', 'g19');
 
 --
--- Triggers `shop`
+-- 触发器 `shop`
 --
 DELIMITER $$
 CREATE TRIGGER `insert_guid` BEFORE INSERT ON `shop` FOR EACH ROW SET NEW.guid = UUID()
@@ -314,11 +370,11 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- 表的结构 `users`
 --
 
 CREATE TABLE `users` (
-  `user_id` int(10) UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(40) NOT NULL,
   `email` varchar(60) NOT NULL,
@@ -327,61 +383,71 @@ CREATE TABLE `users` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Indexes for dumped tables
+-- 转存表中的数据 `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `pass`, `reg_date`) VALUES
+(1, 'XiCheng', 'Yang', '2737492311@qq.com', '1ccdb899779ec5a69d541e223d04eab1e69239bf', '2024-10-29 00:04:05'),
+(2, 'YuTong', 'Wang', '22030527@czu.cn', 'cbeedd6ac50020d388d9f359c14af66913a02f66', '2024-11-03 03:12:22'),
+(3, 'JiangYang', 'Xv', '22030528@czu.cn', 'cb0c1d576e849259e4d8b65666ceed45ca726f58', '2024-11-03 03:43:39'),
+(4, 'Han', 'Yang', '22030530@czu.cn', '0a65b08fa1093a545d71fd795290ba0f8f9b551b', '2024-11-03 04:37:32');
+
+--
+-- 转储表的索引
 --
 
 --
--- Indexes for table `forum`
+-- 表的索引 `forum`
 --
 ALTER TABLE `forum`
   ADD PRIMARY KEY (`post_id`);
 
 --
--- Indexes for table `orders`
+-- 表的索引 `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`);
 
 --
--- Indexes for table `order_contents`
+-- 表的索引 `order_contents`
 --
 ALTER TABLE `order_contents`
   ADD PRIMARY KEY (`content_id`);
 
 --
--- Indexes for table `users`
+-- 表的索引 `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- 在导出的表使用AUTO_INCREMENT
 --
 
 --
--- AUTO_INCREMENT for table `forum`
+-- 使用表AUTO_INCREMENT `forum`
 --
 ALTER TABLE `forum`
-  MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `post_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `orders`
+-- 使用表AUTO_INCREMENT `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `order_contents`
+-- 使用表AUTO_INCREMENT `order_contents`
 --
 ALTER TABLE `order_contents`
-  MODIFY `content_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `content_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `users`
+-- 使用表AUTO_INCREMENT `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

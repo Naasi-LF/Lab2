@@ -6,7 +6,7 @@ if (strpos($_SERVER['SERVER_NAME'], "pedro") !== false)
 }
 else
 {
-    $dbc = mysqli_connect("localhost", "root", "123456", "site_db") 
+    $dbc = mysqli_connect("localhost", "root", "", "site_db") 
     or die(mysqli_connect_error());
 }
 

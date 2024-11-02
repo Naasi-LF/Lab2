@@ -26,25 +26,30 @@ function validate( $dbc, $email = '', $pwd = '')
   # Check email field.
   if ( empty( $email ) ) 
   { $errors[] = 'Enter your email address.' ; } 
-  else  { $e = mysqli_real_escape_string( $dbc, trim( $email ) ) ; }
+  else  { $e = trim( $email ) ; }
 
   # Check password field.
   if ( empty( $pwd ) ) 
   { $errors[] = 'Enter your password.' ; } 
-  else { $p = mysqli_real_escape_string( $dbc, trim( $pwd ) ) ; }
+  else { $p = trim( $pwd ) ; }
 
   # On success retrieve user_id, first_name, and last name from 'users' database.
   if ( empty( $errors ) ) 
   {
-    $q = "SELECT user_id, first_name, last_name FROM users WHERE email='$e' AND pass=SHA1('$p')" ;  
-    $r = mysqli_query ( $dbc, $q ) ;
-    if ( @mysqli_num_rows( $r ) == 1 ) 
+    $stmt = $dbc->prepare("SELECT user_id, first_name, last_name FROM users WHERE email = ? AND pass = SHA1(?)");
+    $stmt->bind_param('ss', $e, $p);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) 
     {
-      $row = mysqli_fetch_array ( $r, MYSQLI_ASSOC ) ;
-      return array( true, $row ) ; 
+      $row = $result->fetch_assoc();
+      return array( true, $row ); 
     }
     # Or on failure set error message.
     else { $errors[] = 'Email address and password not found.' ; }
+
+    $stmt->close();
   }
   # On failure retrieve error message/s.
   return array( false, $errors ) ; 

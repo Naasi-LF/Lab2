@@ -20,7 +20,6 @@ require('connect_db.php');
 # Get search and sort parameters
 $search = isset($_GET['search']) ? mysqli_real_escape_string($dbc, $_GET['search']) : '';
 $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-
 ?>
 
 <!-- Navigation bar -->
@@ -42,7 +41,7 @@ $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
                     <a class="nav-link" href="home.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="orders_received.php">orders</a>
+                    <a class="nav-link" href="orders_received.php">Orders</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="goodbye.php">Logout</a>
@@ -57,7 +56,7 @@ $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     <form method="get" action="forum.php" class="mb-4">
         <div class="row g-3 align-items-center">
             <div class="col-md-8">
-                <input type="text" name="search" class="form-control" placeholder="Search messages or subjects..." value="<?php echo htmlspecialchars($search); ?>">
+                <input type="text" name="search" class="form-control" placeholder="Search by subject, message, or user name..." value="<?php echo htmlspecialchars($search); ?>">
             </div>
             <div class="col-md-2">
                 <select name="order" class="form-select">
@@ -76,7 +75,7 @@ $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     # Build query with search and order
     $q = "SELECT * FROM forum";
     if (!empty($search)) {
-        $q .= " WHERE subject LIKE '%$search%' OR message LIKE '%$search%'";
+        $q .= " WHERE subject LIKE '%$search%' OR message LIKE '%$search%' OR first_name LIKE '%$search%' OR last_name LIKE '%$search%' OR CONCAT(first_name, ' ', last_name) LIKE '%$search%'";
     }
     $q .= " ORDER BY post_date $order";
     $r = mysqli_query($dbc, $q);
