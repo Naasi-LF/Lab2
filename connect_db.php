@@ -6,6 +6,7 @@ if (strpos($_SERVER['SERVER_NAME'], "pedro") !== false)
 }
 else
 {
+    # you can change the passwd
     $dbc = mysqli_connect("localhost", "root", "", "site_db") 
     or die(mysqli_connect_error());
 }
